@@ -22,6 +22,8 @@
 #include <cstring>
 
 #include <algorithm> // <--- Обязательно для std::sort
+
+#include <QRegularExpression>
  
 
 struct CellPos {
@@ -80,7 +82,9 @@ CombinedConfig parseCombinedControlFile(const QString &filePath) {
             if (line.isEmpty() || line.startsWith("#")) continue;
 
             // Разбиваем строку по пробелам, запятым и табам
-            QStringList tokens = line.split(QRegExp("[\\s,\\t]+"), QString::SkipEmptyParts);
+            // QStringList tokens = line.split(QRegExp("[\\s,\\t]+"), QString::SkipEmptyParts); // deprecated
+            QStringList tokens = line.split(QRegularExpression("[\\s,\\t]+"), Qt::SkipEmptyParts);
+            
             if (tokens.size() < 3) continue;
 
             QString key = tokens[0].toLower();

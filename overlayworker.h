@@ -62,7 +62,7 @@ public:
     bool isBusy() const { return m_is_busy; }
     // Добавляем макрос Q_INVOKABLE, чтобы Qt Meta-Object Compiler 
     // зарегистрировал эту функцию и её можно было вызывать через invokeMethod!
-    Q_INVOKABLE void runStartupGreeting(CombinedConfig *my_cfg); 
+    Q_INVOKABLE void runStartupGreeting(); 
 
 public slots:
     // Функция векторной ARM NEON конвертации монолитного sharedCanvas 1920x1080 в YUV

@@ -24,8 +24,6 @@
 
 #include <cmath> // for greeting
 
-//#include <sys/mman.h> already exist
-
 #include <QThread>
 
 
@@ -273,78 +271,78 @@ void OverlayWorker::flip_buffer() {
 
 #include <cmath> // Убедитесь, что этот инклюд есть вверху для функции std::sin
 
-QImage OverlayWorker::generateGreeting(int canvas_width, int canvas_height) {
-    QImage img(canvas_width, canvas_height, QImage::Format_RGBA8888);
-    img.fill(Qt::transparent); 
+// QImage OverlayWorker::generateGreeting() {
+//     QImage img(canvas_width, canvas_height, QImage::Format_RGBA8888);
+//     img.fill(Qt::transparent); 
 
-    static QElapsedTimer greetingTimer;
-    static bool isTimerStarted = false;
+//     static QElapsedTimer greetingTimer;
+//     static bool isTimerStarted = false;
     
-    if (!isTimerStarted) {
-        greetingTimer.start();
-        isTimerStarted = true;
-    }
+//     if (!isTimerStarted) {
+//         greetingTimer.start();
+//         isTimerStarted = true;
+//     }
 
-    qint64 elapsed = greetingTimer.elapsed();
+//     qint64 elapsed = greetingTimer.elapsed();
 
-    // FIXED: Теперь заставка длится ровно 4 секунды (4000 мс)
-    if (elapsed > 4000) {
-        return img; 
-    }
+//     // FIXED: Теперь заставка длится ровно 4 секунды (4000 мс)
+//     if (elapsed > 4000) {
+//         return img; 
+//     }
 
-    // =================================================================
-    // СВЕРХПЛАВНАЯ МАТЕМАТИКА SINE-SMOOTHING (0 мс на CPU)
-    // =================================================================
-    // 1. Нормализуем время: переводим 0..4000 мс в диапазон от 0.0 до 1.0
-    double progress = elapsed / 4000.0;
+//     // =================================================================
+//     // СВЕРХПЛАВНАЯ МАТЕМАТИКА SINE-SMOOTHING (0 мс на CPU)
+//     // =================================================================
+//     // 1. Нормализуем время: переводим 0..4000 мс в диапазон от 0.0 до 1.0
+//     double progress = elapsed / 4000.0;
 
-    // 2. Используем полуволну синуса (от 0 до Pi).
-    // На отрезке progress [0..1] функция sin(progress * M_PI) выдаст идеальную 
-    // колоколообразную кривую: начнется в 0.0, плавно взлетит до 1.0 ровно 
-    // посередине (на 2-й секунде) и сверхплавно опустится в 0.0 к концу.
-    double smoothFactor = std::sin(progress * M_PI);
+//     // 2. Используем полуволну синуса (от 0 до Pi).
+//     // На отрезке progress [0..1] функция sin(progress * M_PI) выдаст идеальную 
+//     // колоколообразную кривую: начнется в 0.0, плавно взлетит до 1.0 ровно 
+//     // посередине (на 2-й секунде) и сверхплавно опустится в 0.0 к концу.
+//     double smoothFactor = std::sin(progress * M_PI);
 
-    // 3. Переводим коэффициент плавности в значение прозрачности Alpha (0..255)
-    int alpha = static_cast<int>(smoothFactor * 255.0);
+//     // 3. Переводим коэффициент плавности в значение прозрачности Alpha (0..255)
+//     int alpha = static_cast<int>(smoothFactor * 255.0);
 
-    if (alpha < 0) alpha = 0;
-    if (alpha > 255) alpha = 255;
-    // =================================================================
+//     if (alpha < 0) alpha = 0;
+//     if (alpha > 255) alpha = 255;
+//     // =================================================================
 
-    QPainter painter(&img);
-    painter.setRenderHint(QPainter::TextAntialiasing, true);
+//     QPainter painter(&img);
+//     painter.setRenderHint(QPainter::TextAntialiasing, true);
 
-    // 1. ПЛАВНОЕ ЗАТЕМНЕНИЕ ВСЕГО ЭКРАНА СИНУСОИДАЛЬНОЙ ПОДЛОЖКОЙ
-    int bgAlpha = static_cast<int>(alpha * 0.75); // Максимальное затемнение фона — около 190
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(0, 0, 0, bgAlpha)); 
-    painter.drawRect(img.rect());
+//     // 1. ПЛАВНОЕ ЗАТЕМНЕНИЕ ВСЕГО ЭКРАНА СИНУСОИДАЛЬНОЙ ПОДЛОЖКОЙ
+//     int bgAlpha = static_cast<int>(alpha * 0.75); // Максимальное затемнение фона — около 190
+//     painter.setPen(Qt::NoPen);
+//     painter.setBrush(QColor(0, 0, 0, bgAlpha)); 
+//     painter.drawRect(img.rect());
 
-    // 2. ДИНАМИЧЕСКИЙ ОРАНЖЕВЫЙ ЦВЕТ С ГЛУБОКИМ ГРАДИЕНТОМ НАСЫЩЕНИЯ
-    // Благодаря smoothFactor, цвет рождается из полной темноты (0,0,0), 
-    // нарастает до глубокого терракотового и в пике раскрывается в сочный оранжевый (255, 120, 0)
-    int red = static_cast<int>(smoothFactor * 255.0);   
-    int green = static_cast<int>(smoothFactor * 120.0); 
-    int blue = 0;                                        
+//     // 2. ДИНАМИЧЕСКИЙ ОРАНЖЕВЫЙ ЦВЕТ С ГЛУБОКИМ ГРАДИЕНТОМ НАСЫЩЕНИЯ
+//     // Благодаря smoothFactor, цвет рождается из полной темноты (0,0,0), 
+//     // нарастает до глубокого терракотового и в пике раскрывается в сочный оранжевый (255, 120, 0)
+//     int red = static_cast<int>(smoothFactor * 255.0);   
+//     int green = static_cast<int>(smoothFactor * 120.0); 
+//     int blue = 0;                                        
     
-    QColor dynamicOrange(red, green, blue, alpha);
+//     QColor dynamicOrange(red, green, blue, alpha);
 
-    // 3. ОГРОМНЫЙ ШРИФТ ДЛЯ ЗАГОЛОВКА
-    int bigFontSize = canvas_width / 18; // Сделали шрифт еще чуть крупнее и солиднее
-    QFont font("Arial", bigFontSize, QFont::Bold);
-    font.setKerning(false);
-    painter.setFont(font);
+//     // 3. ОГРОМНЫЙ ШРИФТ ДЛЯ ЗАГОЛОВКА
+//     int bigFontSize = canvas_width / 18; // Сделали шрифт еще чуть крупнее и солиднее
+//     QFont font("Arial", bigFontSize, QFont::Bold);
+//     font.setKerning(false);
+//     painter.setFont(font);
 
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.setPen(dynamicOrange);
+//     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+//     painter.setPen(dynamicOrange);
 
-    // Рисуем заголовок "Greeting" идеально по центру FullHD холста
-    painter.drawText(img.rect(), Qt::AlignCenter, "PROFITT PBX-MTV-5161");
+//     // Рисуем заголовок "Greeting" идеально по центру FullHD холста
+//     painter.drawText(img.rect(), Qt::AlignCenter, "PROFITT PBX-MTV-5161");
     
-    painter.end();
+//     painter.end();
 
-    return img;
-}
+//     return img;
+// }
 
 // полностью измененный и оптимизированный код функции, который защитит пропорции и автоматически 
 // отцентрирует часы внутри любого прямоугольника:
@@ -1004,7 +1002,7 @@ QImage OverlayWorker::generateYellowClockOnlyMS(int clock_width, int clock_heigh
     return img;
 }
 
-void OverlayWorker::runStartupGreeting(CombinedConfig *my_cfg) {
+void OverlayWorker::runStartupGreeting() {
     qDebug() << "STARTUP | Launching pitch-black 4-second greeting loop...";
 
     QElapsedTimer greetingTimer;
@@ -1131,7 +1129,7 @@ void OverlayWorker::process_and_write_full_scene(const QList<SceneElementData> &
 
     // ВЫЧИСЛЯЕМ АДРЕС ТЕКУЩЕГО СКРЫТОГО БУФЕРА ЗАПИСИ
     int nextWriteIndex = (m_current_display_idx == 0) ? 1 : 0;
-    unsigned char* active_fb_ptr = m_mmap_base + (nextWriteIndex * FRAME_SIZE);
+    // unsigned char* active_fb_ptr = m_mmap_base + (nextWriteIndex * FRAME_SIZE); //warning: unused variable ‘active_fb_ptr’ 
 
     // =========================================================================
     // ЭТАП А1: ЗАПИСЬ ТЯЖЕЛОЙ СТАТИКИ (Отрабатывает 2 кадра подряд ТОЛЬКО при старте/смене сетки)
