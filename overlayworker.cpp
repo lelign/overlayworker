@@ -929,14 +929,14 @@ QImage OverlayWorker::generateYellowClockOnlyMS(int clock_width, int clock_heigh
     return img;
 }
 
-void OverlayWorker::runStartupGreeting() {
+void OverlayWorker::runStartupGreeting(const CombinedConfig &cfg) {
     qDebug() << "STARTUP | Launching pitch-black 4-second greeting loop...";
 
     QElapsedTimer greetingTimer;
     greetingTimer.start();
 
     // Предварительно генерируем базовую сетку в ОЗУ
-    QImage baseGrid = generateFullScreenGrid(2, 2); 
+    QImage baseGrid = generateFullScreenGrid(cfg.grid_h, cfg.grid_v); 
 
     while (greetingTimer.elapsed() <= 4000) {
         qint64 elapsed = greetingTimer.elapsed();

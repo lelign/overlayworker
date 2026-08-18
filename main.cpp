@@ -26,41 +26,11 @@
 #include <QRegularExpression>
  
 
-struct CellPos {
-    int col = 0;
-    int row = 0;
-};
 
-struct LabelConfigData {
-    int col = 0;
-    int row = 0;
-    int number = 0;
-    QString title = "";
-};
 
-struct InputConfigData {
-    int col = 0;
-    int row = 0;
-    int number = 0;
-    QString title = "";
-};
 
-struct CombinedConfig {
-    int grid_h = 2; // Дефолтные значения
-    int grid_v = 2;
-    bool analog_enable;
-    CellPos analog;
-    bool yellow_enable;
-    CellPos yellow;
-    bool magenta_enable;
-    CellPos magenta;
-    bool cyan_enable;
-    CellPos cyan;
-    bool green_enable;
-    CellPos green;    
-    QList<LabelConfigData> labels; // <-- Динамический список для любого количества ярлыков (хоть 30 штук!)
-    QList<InputConfigData> staticInputs; // <-- Динамический список для любого количества inputs
-};
+
+
 
 
 CombinedConfig parseCombinedControlFile(const QString &filePath) {
@@ -84,7 +54,7 @@ CombinedConfig parseCombinedControlFile(const QString &filePath) {
             // Разбиваем строку по пробелам, запятым и табам
             // QStringList tokens = line.split(QRegExp("[\\s,\\t]+"), QString::SkipEmptyParts); // deprecated
             QStringList tokens = line.split(QRegularExpression("[\\s,\\t]+"), Qt::SkipEmptyParts);
-            
+
             if (tokens.size() < 3) continue;
 
             QString key = tokens[0].toLower();
@@ -229,7 +199,13 @@ int main(int argc, char *argv[]) {
     // послушно подождать ровно 4 секунды, пока на ПЛИС плавно горит приветствие!
     // Сначала парсим файл конфигурации
     CombinedConfig cfg = parseCombinedControlFile("/home/root/control.txt");
-    QMetaObject::invokeMethod(worker, "runStartupGreeting", Qt::BlockingQueuedConnection);
+    // добавить регистрацию типа в самом начале функции main(), иначе Qt в
+    //  рантайме не сможет передать структуру между потоками:
+    qRegisterMetaType<CombinedConfig>("CombinedConfig");
+    // Передаем worker, метод и саму структуру cfg внутрь лямбды
+    QMetaObject::invokeMethod(worker, [worker, cfg]() {
+                                worker->runStartupGreeting(cfg);
+                            }, Qt::BlockingQueuedConnection);
     // =========================================================================
 
     // Как только 4 секунды прошли, заставка завершилась и полностью стёрлась из RAM.
@@ -241,6 +217,8 @@ int main(int argc, char *argv[]) {
 
     // Регистрируем тип данных в метасистеме Qt для безопасной межпоточной передачи
     qRegisterMetaType<QList<SceneElementData>>("QList<SceneElementData>");
+
+   
 
         QObject::connect(frameTimer, &QTimer::timeout, [worker]() {
             // Защита очереди (Drop-Frame)
