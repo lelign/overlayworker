@@ -1,0 +1,27 @@
+Direct assembly in DDR
+
+resultst:
+grid2*5
+==================================================================
+================== ULTRA-FAST DIRECT DDR WORKER ==================
+Worker Intel | Total Frame Process Time : 22 ms (Direct DDR)
+==================================================================
+
+grid 2*2
+Worker Intel | Total Frame Process Time : 47 ms (Direct DDR)
+==================================================================
+================== ULTRA-FAST DIRECT DDR WORKER ==================
+Worker Intel | Total Frame Process Time : 46 ms (Direct DDR)
+==================================================================
+================== ULTRA-FAST DIRECT DDR WORKER ==================
+Worker Intel | Total Frame Process Time : 83 ms (Direct DDR)
+==================================================================
+
+
+83 ms !!!
+
+Ну а вообще прекрасно работает, необходимо следить за праильностью записей 
+в commands.txt
+и подбирать значения 
+main() > frameTimer->start(29); <29>  при некоторых раскладках мигают 
+желтые часы (с милисекундами)
