@@ -95,7 +95,6 @@ private:
     QImage generateTimeImageCyan(int clock_width, int clock_height);
     QImage generateLabel(int label_width, int label_height, int labelNumber, QString labelTitle);
     QImage generateInputStatic(int inputStatic_width, int inputStatic_height, int inputStaticNumber, QString inputStaticTitle);
-    // QImage generateGreeting(int canvas_width, int canvas_height);
     QImage generateYellowClockOnlyMS(int clock_width, int clock_height);
 
     // аведем воркеру простой флаг занятости m_is_busy. Если воркер занят, 
