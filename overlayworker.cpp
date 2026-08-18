@@ -1004,7 +1004,7 @@ QImage OverlayWorker::generateYellowClockOnlyMS(int clock_width, int clock_heigh
     return img;
 }
 
-void OverlayWorker::runStartupGreeting() {
+void OverlayWorker::runStartupGreeting(CombinedConfig *my_cfg) {
     qDebug() << "STARTUP | Launching pitch-black 4-second greeting loop...";
 
     QElapsedTimer greetingTimer;

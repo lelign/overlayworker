@@ -62,7 +62,7 @@ public:
     bool isBusy() const { return m_is_busy; }
     // Добавляем макрос Q_INVOKABLE, чтобы Qt Meta-Object Compiler 
     // зарегистрировал эту функцию и её можно было вызывать через invokeMethod!
-    Q_INVOKABLE void runStartupGreeting(); 
+    Q_INVOKABLE void runStartupGreeting(CombinedConfig *my_cfg); 
 
 public slots:
     // Функция векторной ARM NEON конвертации монолитного sharedCanvas 1920x1080 в YUV
@@ -95,7 +95,7 @@ private:
     QImage generateTimeImageCyan(int clock_width, int clock_height);
     QImage generateLabel(int label_width, int label_height, int labelNumber, QString labelTitle);
     QImage generateInputStatic(int inputStatic_width, int inputStatic_height, int inputStaticNumber, QString inputStaticTitle);
-    QImage generateGreeting(int canvas_width, int canvas_height);
+    // QImage generateGreeting(int canvas_width, int canvas_height);
     QImage generateYellowClockOnlyMS(int clock_width, int clock_height);
 
     // аведем воркеру простой флаг занятости m_is_busy. Если воркер занят, 
