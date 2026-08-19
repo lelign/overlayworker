@@ -4,13 +4,13 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <QDebug>
-#include <cerrno>
+// #include <cerrno>
 #include <algorithm>
 
 #include <arm_neon.h>
 
-#include <pthread.h>
-#include <sched.h>
+// #include <pthread.h>
+// #include <sched.h>
 
 #include <QElapsedTimer> // <--- Добавьте эту строчку
 
@@ -20,7 +20,7 @@
 #include <QFont>
 #include <QtSvg/QSvgRenderer>
 
-#include <cstring>
+// #include <cstring>
 
 #include <cmath> // for greeting
 
@@ -268,8 +268,6 @@ void OverlayWorker::flip_buffer() {
         qCritical() << "Worker IOCTL FLIP failed!";
     }
 }
-
-#include <cmath> // Убедитесь, что этот инклюд есть вверху для функции std::sin
 
 // полностью измененный и оптимизированный код функции, который защитит пропорции и автоматически 
 // отцентрирует часы внутри любого прямоугольника:

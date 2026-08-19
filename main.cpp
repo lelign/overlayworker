@@ -10,16 +10,16 @@
 #include <QDebug>
 
 #include <QList>
-#include <functional> // Для std::function
+// #include <functional> // Для std::function
 
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
-#include <QResource>
-#include <QDirIterator>
-#include <unistd.h>
+// #include <QResource>
+// #include <QDirIterator>
+// #include <unistd.h>
 
-#include <cstring>
+// #include <cstring>
 
 #include <algorithm> // <--- Обязательно для std::sort
 

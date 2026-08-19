@@ -5,8 +5,8 @@
 #include <QImage>
 #include <QList>
 
-#include <QMutex>
-#include <QWaitCondition>
+// #include <QMutex>
+// #include <QWaitCondition>
 
 
 
@@ -91,14 +91,14 @@ struct CombinedConfig {
 class OverlayWorker : public QObject {
     Q_OBJECT
 public:
-    QMutex m_syncMutex;
-    QWaitCondition m_syncCondition;
+    // QMutex m_syncMutex;
+    // QWaitCondition m_syncCondition;
     QList<SceneElementData> m_nextSceneData;
     bool m_hasNewData = false;
 
     // Слот process_and_write_full_scene больше НЕ нужен как слот Qt! 
     // Мы перенесем его в бесконечный рабочий цикл потока.
-    void startWorkerLoop(); 
+    // void startWorkerLoop(); 
     explicit OverlayWorker(QObject *parent = nullptr);
     ~OverlayWorker();
 
